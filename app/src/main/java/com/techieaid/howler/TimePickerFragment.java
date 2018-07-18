@@ -28,8 +28,8 @@ import java.util.Calendar;
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        String setTime = String.format("%02d",hourOfDay)+":"+String.format("%02d",minute);
-        ((MainActivity)getActivity()).DisplayAlarmTime(setTime);
+
+        ((MainActivity)getActivity()).DisplayAlarmTime(hourOfDay,minute);
 
     }
 }

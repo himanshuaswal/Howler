@@ -1,6 +1,7 @@
 package com.techieaid.howler;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,7 +43,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void DisplayAlarmTime(String time){
-        mAdapter.setAlarmTime(time);
+    public void DisplayAlarmTime(int hourOfDay,int minute){
+        String setTime = String.format("%02d",hourOfDay)+":"+String.format("%02d",minute);
+        mAdapter.setAlarmTime(setTime);
+        setAlarm();
+    }
+
+    private void setAlarm() {
+        Intent intent = new Intent(this,SnoozeActivity.class);
     }
 }
