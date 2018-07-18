@@ -39,7 +39,12 @@ import java.util.List;
 
     @Override
     public int getItemCount() {
-        return 10;
+        return mAlarmsAdapter.size();
+    }
+
+    public void setAlarmTime(String alarmTime) {
+        mAlarmsAdapter.add(alarmTime);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
