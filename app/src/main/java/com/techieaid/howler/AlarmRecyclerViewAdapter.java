@@ -18,11 +18,11 @@ import java.util.List;
  */public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecyclerViewAdapter.ViewHolder> {
 
      private Context mContext;
-     private ArrayList<String> mAlarmsAdapter;
+     private ArrayList<String> mAlarmsCollection;
 
     AlarmRecyclerViewAdapter(Context context, ArrayList<String> alarmsAdapter) {
         this.mContext = context;
-        mAlarmsAdapter=alarmsAdapter;
+        mAlarmsCollection=alarmsAdapter;
     }
     @NonNull
     @Override
@@ -33,27 +33,25 @@ import java.util.List;
 
     @Override
     public void onBindViewHolder(@NonNull AlarmRecyclerViewAdapter.ViewHolder holder, int position) {
-        holder.mTextView.setText(mAlarmsAdapter.get(position));
+        holder.mTextView.setText(mAlarmsCollection.get(position));
 
     }
 
     @Override
     public int getItemCount() {
-        return mAlarmsAdapter.size();
+        return mAlarmsCollection.size();
     }
 
     public void setAlarmTime(String alarmTime) {
-        mAlarmsAdapter.add(alarmTime);
+        mAlarmsCollection.add(alarmTime);
         notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextView;
-        private ImageView mImageView;
         public ViewHolder(View itemView) {
             super(itemView);
             mTextView = itemView.findViewById(R.id.alarm_time);
-            mImageView = itemView.findViewById(R.id.trash_icon);
         }
     }
 }

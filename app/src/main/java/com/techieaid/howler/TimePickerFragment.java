@@ -14,7 +14,6 @@ import java.util.Calendar;
 /*
  ** Created by Gautam Krishnan {@link https://github.com/GautiKrish}
  */public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
-     private View mView;
 
 
     @Override
@@ -29,8 +28,8 @@ import java.util.Calendar;
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        String timeset = String.format("%02d",hourOfDay)+":"+String.format("%02d",minute);
-        ((MainActivity)getActivity()).SetAlarmData(timeset);
+        String setTime = String.format("%02d",hourOfDay)+":"+String.format("%02d",minute);
+        ((MainActivity)getActivity()).DisplayAlarmTime(setTime);
 
     }
 }
