@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarm_time"
+        android:fontFamily="@font/varela_round"
+        android:hint="5:30 PM"
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:textSize="30sp"
+        android:textStyle="bold"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_delete_black_18"
+        android:layout_margin="8dp"
+        android:padding="8dp"/>
+
+</LinearLayout>
