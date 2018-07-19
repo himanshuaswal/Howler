@@ -49,9 +49,20 @@ import java.util.List;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextView;
+        private ImageView mImageView;
         public ViewHolder(View itemView) {
             super(itemView);
             mTextView = itemView.findViewById(R.id.alarm_time);
+            mImageView= itemView.findViewById(R.id.trash_icon);
+            mImageView.setOnClickListener(v -> {
+                int iD = getAdapterPosition();
+                deleteAlarm(iD);
+            });
         }
+    }
+
+    private void deleteAlarm(int iD) {
+        mAlarmsCollection.remove(iD);
+        notifyDataSetChanged();
     }
 }
