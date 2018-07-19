@@ -29,7 +29,7 @@ import java.util.Calendar;
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-        ((MainActivity)getActivity()).DisplayAlarmTime(hourOfDay,minute);
+        ((MainActivity)getActivity()).DisplayAlarmTime(hourOfDay,minute );
 
     }
 }

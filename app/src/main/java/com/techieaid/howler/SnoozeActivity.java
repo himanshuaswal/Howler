@@ -1,13 +1,27 @@
 package com.techieaid.howler;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.util.Log;
 
-public class SnoozeActivity extends AppCompatActivity {
+public class SnoozeActivity extends BroadcastReceiver {
+
+    /**
+     * @Override protected void onCreate(Bundle savedInstanceState) {
+     * super.onCreate(savedInstanceState);
+     * setContentView(R.layout.activity_snooze);
+     * }
+     **/
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_snooze);
+    public void onReceive(Context context, Intent intent) {
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        MediaPlayer mp = MediaPlayer.create(context, uri);
+        mp.start();
     }
+
 }
