@@ -10,19 +10,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.techieaid.howler.model.Alarm;
+
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /*
  ** Created by Gautam Krishnan {@link https://github.com/GautiKrish}
  */public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecyclerViewAdapter.ViewHolder> {
 
      private Context mContext;
-     private ArrayList<String> mAlarmsCollection;
+     private RealmResults<Alarm> results;
+     private List<Alarm> mAlarmList;
+     Realm realm;
 
-    AlarmRecyclerViewAdapter(Context context, ArrayList<String> alarmsAdapter) {
+    AlarmRecyclerViewAdapter(Context context, RealmResults<Alarm> results,Realm realm) {
         this.mContext = context;
-        mAlarmsCollection=alarmsAdapter;
+        this.results = results;
+        this.realm = realm;
+        mAlarmList = realm.copyFromRealm(results);
     }
     @NonNull
     @Override
@@ -33,19 +41,20 @@ import java.util.List;
 
     @Override
     public void onBindViewHolder(@NonNull AlarmRecyclerViewAdapter.ViewHolder holder, int position) {
-        holder.mTextView.setText(mAlarmsCollection.get(position));
+        holder.mTextView.setText(mAlarmList.get(position).getAlarmTime());
 
     }
 
     @Override
     public int getItemCount() {
-        return mAlarmsCollection.size();
+        return mAlarmList.size();
     }
 
-    public void setAlarmTime(String alarmTime) {
-        mAlarmsCollection.add(alarmTime);
+    public void updateAdapter() {
         notifyDataSetChanged();
+
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextView;
@@ -56,13 +65,13 @@ import java.util.List;
             mImageView= itemView.findViewById(R.id.trash_icon);
             mImageView.setOnClickListener(v -> {
                 int iD = getAdapterPosition();
-                deleteAlarm(iD);
+               // deleteAlarm(iD);
             });
         }
     }
 
-    private void deleteAlarm(int iD) {
+    /*private void deleteAlarm(int iD) {
         mAlarmsCollection.remove(iD);
         notifyDataSetChanged();
-    }
+    }*/
 }
