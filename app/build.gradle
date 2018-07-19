@@ -22,7 +22,7 @@ android {
         sourceCompatibility 1.8
     }
 
-    realm{
+    realm {
         syncEnabled = true
     }
 }

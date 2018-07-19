@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             //Today Set time passed, count to tomorrow
             calSet.add(Calendar.DATE, 1);
         }
-        mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, calSet.getTimeInMillis(), mPendingIntent);
+        mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calSet.getTimeInMillis(), mPendingIntent);
         Snackbar snackbar = Snackbar.make(mRelativeLayout, "Alarm has been set", Snackbar.LENGTH_LONG);
         TextView messageTextView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         messageTextView.setTextColor(getColor(R.color.colorAccent));

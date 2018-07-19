@@ -22,6 +22,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         MediaPlayer mp = MediaPlayer.create(context, uri);
         mp.start();
+        Intent startSnoozeActivity =  new Intent(context,SnoozeActivity.class);
+        startSnoozeActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(startSnoozeActivity);
     }
 
 }
