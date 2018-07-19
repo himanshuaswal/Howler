@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main_alarms_layout"
     android:orientation="vertical"
     tools:context=".MainActivity">
     
@@ -39,11 +40,12 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:elevation="4dp"
+        android:layout_margin="16dp"
         android:id="@+id/add_alarm"
         android:layout_marginBottom="30dp"
         android:layout_alignParentBottom="true"
         app:backgroundTint="@color/colorAccent"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentEnd="true"
         android:src="@drawable/ic_add_icon"/>
 
 </RelativeLayout>
