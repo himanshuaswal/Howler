@@ -8,7 +8,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.util.Log;
 
-public class SnoozeActivity extends BroadcastReceiver {
+public class AlarmReceiver extends BroadcastReceiver {
 
     /**
      * @Override protected void onCreate(Bundle savedInstanceState) {

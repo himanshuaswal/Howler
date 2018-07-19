@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".SnoozeActivity" android:process=":remote"/>
+        <receiver android:name=".AlarmReceiver" android:process=":remote"/>
     </application>
 
 </manifest>

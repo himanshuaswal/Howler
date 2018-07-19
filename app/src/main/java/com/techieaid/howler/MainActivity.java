@@ -18,13 +18,16 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import io.realm.Realm;
+
 public class MainActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     AlarmRecyclerViewAdapter mAdapter;
     private FloatingActionButton mFloatingActionButton;
     private ArrayList<String> alarms = new ArrayList<>();
     private PendingIntent mPendingIntent;
-    private static final int REQUEST_CODE = 0;
+    private static final int REQUEST_CODE = 99;
+    private Realm realm;
     AlarmManager mAlarmManager;
     private RelativeLayout mRelativeLayout;
 
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.custom_toolbar));
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         alarms = new ArrayList<>();
         alarms.add("04:30");
@@ -63,20 +68,20 @@ public class MainActivity extends AppCompatActivity {
         long milliseconds = (hourOfDay * 60 + minute) * 60000;
         Log.i("Milliseconds", "Date in milli ::" + milliseconds);
         Log.i("System Time", "System time ::" + System.currentTimeMillis());
-        setAlarm(hourOfDay,minute);
+        setAlarm(hourOfDay, minute, setTime);
     }
 
-    private void setAlarm(int hourOfDay, int minute) {
-        Intent intent = new Intent(getBaseContext(), SnoozeActivity.class);
+    private void setAlarm(int hourOfDay, int minute, String setTime) {
+        Intent intent = new Intent(getBaseContext(), AlarmReceiver.class);
         mPendingIntent = PendingIntent.getBroadcast(getBaseContext(), REQUEST_CODE, intent, 0);
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Calendar calNow =   Calendar.getInstance();
+        Calendar calNow = Calendar.getInstance();
         Calendar calSet = (Calendar) calNow.clone();
         calSet.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calSet.set(Calendar.MINUTE, minute);
         calSet.set(Calendar.SECOND, 0);
         calSet.set(Calendar.MILLISECOND, 0);
-        if(calSet.compareTo(calNow) <= 0){
+        if (calSet.compareTo(calNow) <= 0) {
             //Today Set time passed, count to tomorrow
             calSet.add(Calendar.DATE, 1);
         }
