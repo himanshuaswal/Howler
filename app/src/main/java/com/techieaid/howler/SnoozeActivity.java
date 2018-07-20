@@ -24,8 +24,6 @@ public class SnoozeActivity extends AppCompatActivity {
                         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                         WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         mQuestionTextView = findViewById(R.id.question);
-        animation = AnimationUtils.loadAnimation(this,R.anim.fade_in);
-        mQuestionTextView.startAnimation(animation);
 
     }
 }

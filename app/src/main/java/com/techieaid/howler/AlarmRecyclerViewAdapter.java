@@ -50,7 +50,8 @@ import io.realm.RealmResults;
         return mAlarmList.size();
     }
 
-    public void updateAdapter() {
+    public void updateAdapter(Alarm alarm) {
+        mAlarmList.add(alarm);
         notifyDataSetChanged();
 
     }
@@ -65,13 +66,14 @@ import io.realm.RealmResults;
             mImageView= itemView.findViewById(R.id.trash_icon);
             mImageView.setOnClickListener(v -> {
                 int iD = getAdapterPosition();
-               // deleteAlarm(iD);
+                deleteAlarm(iD);
             });
         }
     }
 
-    /*private void deleteAlarm(int iD) {
-        mAlarmsCollection.remove(iD);
+    private void deleteAlarm(int iD) {
+
+        mAlarmList.remove(iD);
         notifyDataSetChanged();
-    }*/
+    }
 }

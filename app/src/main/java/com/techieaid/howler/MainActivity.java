@@ -55,9 +55,6 @@ public class MainActivity extends AppCompatActivity {
         realm.executeTransaction(realm -> {
             results = realm.where(Alarm.class).findAll();
         });
-        results.addChangeListener(alarms -> {
-
-        });
         mRecyclerView = findViewById(R.id.alarm_item);
         mRelativeLayout = findViewById(R.id.main_alarms_layout);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -91,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             alarm.setAlarmTime(setTime);
             alarm.setRequestCode(REQUEST_CODE);
         });
+        mAdapter.updateAdapter(alarm);
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         Calendar calNow = Calendar.getInstance();
         Calendar calSet = (Calendar) calNow.clone();
