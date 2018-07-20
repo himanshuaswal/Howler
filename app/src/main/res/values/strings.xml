@@ -2,4 +2,6 @@
     <string name="app_name">Howler</string>
     <string name="Splash_CD">Splash Screen for the app</string>
     <string name="toolbar_title">HOWLER</string>
+    <string name="question_hint">First Question comes up</string>
+    <string name="first_question">Who is the first Prime Minister of India?</string>
 </resources>
