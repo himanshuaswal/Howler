@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private int REQUEST_CODE;
     private Realm realm;
     AlarmManager mAlarmManager;
-    private RelativeLayout mRelativeLayout;
+    private CoordinatorLayout mCoordinatorLayout;
     private RealmResults<Alarm> results;
     private int PRIMARY_KEY;
     private Alarm alarm;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             results = realm.where(Alarm.class).findAll();
         });
         mRecyclerView = findViewById(R.id.alarm_item);
-        mRelativeLayout = findViewById(R.id.main_alarms_layout);
+        mCoordinatorLayout = findViewById(R.id.coordinator_layout);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new AlarmRecyclerViewAdapter(this, results, realm);
         mRecyclerView.setAdapter(mAdapter);
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             calSet.add(Calendar.DATE, 1);
         }
         mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calSet.getTimeInMillis(), mPendingIntent);
-        Snackbar snackbar = Snackbar.make(mRelativeLayout, "Alarm has been set", Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Alarm has been set", Snackbar.LENGTH_LONG);
         TextView messageTextView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         messageTextView.setTextColor(getColor(R.color.colorAccent));
         snackbar.show();
