@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         calSet.set(Calendar.SECOND, 0);
         calSet.set(Calendar.MILLISECOND, 0);
         if (calSet.compareTo(calNow) <= 0) {
-            //Today Set time passed, count to tomorrow
             calSet.add(Calendar.DATE, 1);
         }
         mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calSet.getTimeInMillis(), mPendingIntent);

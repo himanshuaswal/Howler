@@ -8,8 +8,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 public class SnoozeActivity extends AppCompatActivity {
-    private TextView mQuestionTextView;
-    private Animation animation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +21,12 @@ public class SnoozeActivity extends AppCompatActivity {
                         WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                         WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        mQuestionTextView = findViewById(R.id.question);
-
     }
+
+    @Override
+    public void onBackPressed() {
+        // do nothing when back key is pressed!
+    }
+
+
 }
