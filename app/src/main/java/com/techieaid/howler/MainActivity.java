@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     AlarmRecyclerViewAdapter mAdapter;
     private FloatingActionButton mFloatingActionButton;
-    private ArrayList<String> alarms = new ArrayList<>();
     private PendingIntent mPendingIntent;
     private int REQUEST_CODE;
     private Realm realm;
@@ -46,12 +45,6 @@ public class MainActivity extends AppCompatActivity {
         Realm.init(this);
         realm = Realm.getDefaultInstance();
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        alarms = new ArrayList<>();
-        alarms.add("04:30");
-        alarms.add("05:00");
-        alarms.add("05:30");
-        alarms.add("06:00");
-        alarms.add("19:00");
         realm.executeTransaction(realm -> {
             results = realm.where(Alarm.class).findAll();
         });
