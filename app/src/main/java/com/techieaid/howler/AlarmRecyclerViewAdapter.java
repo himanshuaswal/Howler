@@ -66,13 +66,18 @@ import io.realm.RealmResults;
             mImageView= itemView.findViewById(R.id.trash_icon);
             mImageView.setOnClickListener(v -> {
                 int iD = getAdapterPosition();
-                deleteAlarm(iD);
+                String time = mTextView.getText().toString();
+                deleteAlarm(iD,time);
+
             });
         }
     }
 
-    private void deleteAlarm(int iD) {
-
+    private void deleteAlarm(int iD,String time) {
+        realm.executeTransaction(realm -> {
+            RealmResults<Alarm>  results=realm.where(Alarm.class).equalTo("alarmTime",time).findAll();
+            results.deleteAllFromRealm();
+        });
         mAlarmList.remove(iD);
         notifyDataSetChanged();
     }
