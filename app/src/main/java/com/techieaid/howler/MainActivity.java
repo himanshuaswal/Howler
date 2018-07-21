@@ -64,12 +64,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAlarm(int hourOfDay, int minute, String setTime) {
-        Intent intent = new Intent(getBaseContext(), SnoozeActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SnoozeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         int numberOfAlarms = (int) realm.where(Alarm.class).count();
         REQUEST_CODE = numberOfAlarms + 1;
         PRIMARY_KEY = numberOfAlarms + 100;
-        mPendingIntent = PendingIntent.getActivity(getBaseContext(), 1, intent, 0);
+        mPendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, 0);
         realm.executeTransaction((Realm realm) -> {
             alarm = realm.createObject(Alarm.class, PRIMARY_KEY);
             alarm.setAlarmTime(setTime);

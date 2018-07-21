@@ -9,6 +9,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,15 +20,15 @@ public class SnoozeActivity extends AppCompatActivity {
     private TextView option3;
     private TextView option4;
     private AlarmManager alarmManager;
-
+    private MediaPlayer mediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_snooze);
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        MediaPlayer mp = MediaPlayer.create(getBaseContext(), uri);
-        mp.setLooping(true);
-        mp.start();
+        mediaPlayer = MediaPlayer.create(getBaseContext(), uri);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
                         WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
@@ -48,24 +49,24 @@ public class SnoozeActivity extends AppCompatActivity {
     }
 
     private void checkAnswer(TextView correctOption) {
-        if (correctOption.getText().toString().compareTo("Jawaharlal Nehru") == 0) {
+        Log.i("Selected Answer",correctOption.getText().toString());
+        if (correctOption.getText().toString().equalsIgnoreCase(getString(R.string.option1))) {
             alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             Intent myIntent = new Intent(getApplicationContext(), SnoozeActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(
                     getApplicationContext(), 1, myIntent, 0);
             alarmManager.cancel(pendingIntent);
+            mediaPlayer.stop();
         }
         else
             Toast.makeText(this,"That's an incorrect answer.",Toast.LENGTH_LONG).show();
-
-
     }
 
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this,"Common you think you can escape me?",Toast.LENGTH_LONG).show();
-
+        Toast.makeText(this,"Ohh I am gonna beat the shit out of you.!",Toast.LENGTH_LONG).show();
     }
 
 
