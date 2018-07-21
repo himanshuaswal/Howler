@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -12,17 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.techieaid.howler.model.Alarm;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,21 +59,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void DisplayAlarmTime(int hourOfDay, int minute) {
-        Log.i("Selected Hour Time", "Hour of Day ::" + hourOfDay);
-        Log.i("System Minute Time", "Minute of Day ::" + minute);
         String setTime = String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute);
-        long milliseconds = (hourOfDay * 60 + minute) * 60000;
-        Log.i("Milliseconds", "Date in milli ::" + milliseconds);
-        Log.i("System Time", "System time ::" + System.currentTimeMillis());
         setAlarm(hourOfDay, minute, setTime);
     }
 
     private void setAlarm(int hourOfDay, int minute, String setTime) {
-        Intent intent = new Intent(getBaseContext(), AlarmReceiver.class);
+        Intent intent = new Intent(getBaseContext(), SnoozeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         int numberOfAlarms = (int) realm.where(Alarm.class).count();
         REQUEST_CODE = numberOfAlarms + 1;
         PRIMARY_KEY = numberOfAlarms + 100;
-        mPendingIntent = PendingIntent.getBroadcast(getBaseContext(), REQUEST_CODE, intent, 0);
+        mPendingIntent = PendingIntent.getActivity(getBaseContext(), 1, intent, 0);
         realm.executeTransaction((Realm realm) -> {
             alarm = realm.createObject(Alarm.class, PRIMARY_KEY);
             alarm.setAlarmTime(setTime);
