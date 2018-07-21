@@ -14,6 +14,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import io.realm.Realm;
+
 public class SnoozeActivity extends AppCompatActivity {
     private TextView option1;
     private TextView option2;
@@ -29,6 +31,7 @@ public class SnoozeActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(getBaseContext(), uri);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
+        Realm.init(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
                         WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
@@ -49,8 +52,8 @@ public class SnoozeActivity extends AppCompatActivity {
     }
 
     private void checkAnswer(TextView correctOption) {
-        Log.i("Selected Answer",correctOption.getText().toString());
         if (correctOption.getText().toString().equalsIgnoreCase(getString(R.string.option1))) {
+            Log.i("Selected Answer",correctOption.getText().toString());
             alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             Intent myIntent = new Intent(getApplicationContext(), SnoozeActivity.class);
             myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -58,15 +61,17 @@ public class SnoozeActivity extends AppCompatActivity {
                     getApplicationContext(), 1, myIntent, 0);
             alarmManager.cancel(pendingIntent);
             mediaPlayer.stop();
+            Intent startAwakeActivity = new Intent(this,FinishActivity.class);
+            startActivity(startAwakeActivity);
         }
         else
-            Toast.makeText(this,"That's an incorrect answer.",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"You still aren't awake.",Toast.LENGTH_LONG).show();
     }
 
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this,"Ohh I am gonna beat the shit out of you.!",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Ohh I am gonna make sure that you wake up.!",Toast.LENGTH_LONG).show();
     }
 
 
