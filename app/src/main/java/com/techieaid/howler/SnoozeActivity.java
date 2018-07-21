@@ -2,6 +2,7 @@ package com.techieaid.howler;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -62,7 +63,8 @@ public class SnoozeActivity extends AppCompatActivity {
             alarmManager.cancel(pendingIntent);
             mediaPlayer.stop();
             Intent startAwakeActivity = new Intent(this,FinishActivity.class);
-            startActivity(startAwakeActivity);
+            //To navigate back to the main activity.
+            TaskStackBuilder.create(this).addNextIntentWithParentStack(startAwakeActivity).startActivities();
         }
         else
             Toast.makeText(this,"You still aren't awake.",Toast.LENGTH_LONG).show();

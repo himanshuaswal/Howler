@@ -19,10 +19,9 @@
         android:text="@string/first_question"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_editor_absoluteY="150dp" />
 
     <TextView
         android:id="@+id/option1"
