@@ -15,7 +15,10 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.techieaid.howler.model.Alarm;
+
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class SnoozeActivity extends AppCompatActivity {
     private TextView option1;
@@ -23,7 +26,10 @@ public class SnoozeActivity extends AppCompatActivity {
     private TextView option3;
     private TextView option4;
     private AlarmManager alarmManager;
+    private Realm realm;
+    private int requestCode;
     private MediaPlayer mediaPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +39,7 @@ public class SnoozeActivity extends AppCompatActivity {
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
         Realm.init(this);
+        realm = Realm.getDefaultInstance();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
                         WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
@@ -54,26 +61,36 @@ public class SnoozeActivity extends AppCompatActivity {
 
     private void checkAnswer(TextView correctOption) {
         if (correctOption.getText().toString().equalsIgnoreCase(getString(R.string.option1))) {
-            Log.i("Selected Answer",correctOption.getText().toString());
+            Log.i("Selected Answer", correctOption.getText().toString());
+            String setTime = getIntent().getStringExtra("Alarm time");
+            Log.i("Retrieved time", setTime);
+            realm.executeTransaction(realm -> {
+                Alarm alarm = realm.where(Alarm.class).equalTo("alarmTime", setTime).findFirst();
+                requestCode = alarm.getRequestCode();
+            });
+            Log.i("Request Code", String.valueOf(requestCode));
             alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             Intent myIntent = new Intent(getApplicationContext(), SnoozeActivity.class);
             myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(
-                    getApplicationContext(), 1, myIntent, 0);
+                    getApplicationContext(), requestCode, myIntent, 0);
             alarmManager.cancel(pendingIntent);
             mediaPlayer.stop();
-            Intent startAwakeActivity = new Intent(this,FinishActivity.class);
+            Intent startAwakeActivity = new Intent(this, FinishActivity.class);
             //To navigate back to the main activity.
             TaskStackBuilder.create(this).addNextIntentWithParentStack(startAwakeActivity).startActivities();
-        }
-        else
-            Toast.makeText(this,"You still aren't awake.",Toast.LENGTH_LONG).show();
+            realm.executeTransaction(realm -> {
+                RealmResults<Alarm> results = realm.where(Alarm.class).equalTo("alarmTime", setTime).findAll();
+                results.deleteAllFromRealm();
+            });
+        } else
+            Toast.makeText(this, "You still aren't awake.", Toast.LENGTH_LONG).show();
     }
 
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this,"Ohh I am gonna make sure that you wake up.!",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Ohh I am gonna make sure that you wake up.!", Toast.LENGTH_LONG).show();
     }
 
 

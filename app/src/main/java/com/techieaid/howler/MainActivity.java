@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -66,10 +65,12 @@ public class MainActivity extends AppCompatActivity {
     private void setAlarm(int hourOfDay, int minute, String setTime) {
         Intent intent = new Intent(getApplicationContext(), SnoozeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("Alarm time", setTime);
         int numberOfAlarms = (int) realm.where(Alarm.class).count();
         REQUEST_CODE = numberOfAlarms + 1;
         PRIMARY_KEY = numberOfAlarms + 100;
-        mPendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, 0);
+        Log.i("Request Code", String.valueOf(REQUEST_CODE));
+        mPendingIntent = PendingIntent.getActivity(getApplicationContext(), REQUEST_CODE, intent, 0);
         realm.executeTransaction((Realm realm) -> {
             alarm = realm.createObject(Alarm.class, PRIMARY_KEY);
             alarm.setAlarmTime(setTime);

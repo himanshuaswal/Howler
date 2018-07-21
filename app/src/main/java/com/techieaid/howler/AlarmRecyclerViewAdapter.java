@@ -1,7 +1,6 @@
 package com.techieaid.howler;
 
 import android.content.Context;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,17 +20,18 @@ import io.realm.RealmResults;
  ** Created by Gautam Krishnan {@link https://github.com/GautiKrish}
  */public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecyclerViewAdapter.ViewHolder> {
 
-     private Context mContext;
-     private RealmResults<Alarm> results;
-     private List<Alarm> mAlarmList;
-     Realm realm;
+    private Context mContext;
+    private RealmResults<Alarm> results;
+    private List<Alarm> mAlarmList;
+    Realm realm;
 
-    AlarmRecyclerViewAdapter(Context context, RealmResults<Alarm> results,Realm realm) {
+    AlarmRecyclerViewAdapter(Context context, RealmResults<Alarm> results, Realm realm) {
         this.mContext = context;
         this.results = results;
         this.realm = realm;
         mAlarmList = realm.copyFromRealm(results);
     }
+
     @NonNull
     @Override
     public AlarmRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -60,22 +60,23 @@ import io.realm.RealmResults;
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextView;
         private ImageView mImageView;
+
         public ViewHolder(View itemView) {
             super(itemView);
             mTextView = itemView.findViewById(R.id.alarm_time);
-            mImageView= itemView.findViewById(R.id.trash_icon);
+            mImageView = itemView.findViewById(R.id.trash_icon);
             mImageView.setOnClickListener(v -> {
                 int iD = getAdapterPosition();
                 String time = mTextView.getText().toString();
-                deleteAlarm(iD,time);
+                deleteAlarm(iD, time);
 
             });
         }
     }
 
-    private void deleteAlarm(int iD,String time) {
+    private void deleteAlarm(int iD, String time) {
         realm.executeTransaction(realm -> {
-            RealmResults<Alarm>  results=realm.where(Alarm.class).equalTo("alarmTime",time).findAll();
+            RealmResults<Alarm> results = realm.where(Alarm.class).equalTo("alarmTime", time).findAll();
             results.deleteAllFromRealm();
         });
         mAlarmList.remove(iD);
