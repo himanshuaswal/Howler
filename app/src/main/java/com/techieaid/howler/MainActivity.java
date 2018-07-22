@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private RealmResults<Alarm> results;
     private int PRIMARY_KEY;
     private Alarm alarm;
+    private int requestCode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +44,23 @@ public class MainActivity extends AppCompatActivity {
         Realm.init(this);
         realm = Realm.getDefaultInstance();
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        realm.executeTransaction(realm -> {
-            results = realm.where(Alarm.class).findAll();
-        });
+        realm.executeTransaction(realm -> results = realm.where(Alarm.class).findAll());
         mRecyclerView = findViewById(R.id.alarm_item);
         mCoordinatorLayout = findViewById(R.id.coordinator_layout);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new AlarmRecyclerViewAdapter(this, results, realm);
+        mAdapter.setOnClickTrashIconListener(setTime -> {
+            realm.executeTransaction(realm -> {
+                RealmResults<Alarm> results = realm.where(Alarm.class).equalTo("alarmTime", setTime).findAll();
+                requestCode = results.first().getRequestCode();
+                results.deleteAllFromRealm();
+            });
+            Intent intent = new Intent(getApplicationContext(), SnoozeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(), requestCode, intent, 0);
+            mPendingIntent.cancel();
+            mAlarmManager.cancel(mPendingIntent);
+        });
         mRecyclerView.setAdapter(mAdapter);
         mFloatingActionButton = findViewById(R.id.add_alarm);
         mFloatingActionButton.setOnClickListener(v -> {
@@ -77,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
             alarm.setRequestCode(REQUEST_CODE);
         });
         mAdapter.updateAdapter(alarm);
-        mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         Calendar calNow = Calendar.getInstance();
         Calendar calSet = (Calendar) calNow.clone();
         calSet.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -87,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         if (calSet.compareTo(calNow) <= 0) {
             calSet.add(Calendar.DATE, 1);
         }
+        mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calSet.getTimeInMillis(), mPendingIntent);
         Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Alarm has been set", Snackbar.LENGTH_LONG);
         TextView messageTextView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
@@ -94,3 +106,6 @@ public class MainActivity extends AppCompatActivity {
         snackbar.show();
     }
 }
+
+
+

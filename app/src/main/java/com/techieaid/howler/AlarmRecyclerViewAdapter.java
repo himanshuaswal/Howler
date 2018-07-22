@@ -3,6 +3,7 @@ package com.techieaid.howler;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,9 @@ import io.realm.RealmResults;
     private Context mContext;
     private RealmResults<Alarm> results;
     private List<Alarm> mAlarmList;
-    Realm realm;
+    private Realm realm;
+    private onClickTrashIconListener mOnClickTrashIconListener;
+
 
     AlarmRecyclerViewAdapter(Context context, RealmResults<Alarm> results, Realm realm) {
         this.mContext = context;
@@ -53,7 +56,7 @@ import io.realm.RealmResults;
     public void updateAdapter(Alarm alarm) {
         mAlarmList.add(alarm);
         notifyDataSetChanged();
-
+        notifyItemInserted(mAlarmList.size());
     }
 
 
@@ -65,6 +68,7 @@ import io.realm.RealmResults;
             super(itemView);
             mTextView = itemView.findViewById(R.id.alarm_time);
             mImageView = itemView.findViewById(R.id.trash_icon);
+
             mImageView.setOnClickListener(v -> {
                 int iD = getAdapterPosition();
                 String time = mTextView.getText().toString();
@@ -75,11 +79,20 @@ import io.realm.RealmResults;
     }
 
     private void deleteAlarm(int iD, String time) {
-        realm.executeTransaction(realm -> {
-            RealmResults<Alarm> results = realm.where(Alarm.class).equalTo("alarmTime", time).findAll();
-            results.deleteAllFromRealm();
-        });
+        Log.i("Adapter ID", String.valueOf(iD));
+        mOnClickTrashIconListener.cancelPendingIntent(time);
         mAlarmList.remove(iD);
         notifyDataSetChanged();
     }
+
+    public interface onClickTrashIconListener {
+        void cancelPendingIntent(String time);
+    }
+
+    public void setOnClickTrashIconListener(onClickTrashIconListener mOnClickTrashIconListener) {
+        this.mOnClickTrashIconListener = mOnClickTrashIconListener;
+
+    }
+
+
 }

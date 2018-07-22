@@ -65,8 +65,9 @@ public class SnoozeActivity extends AppCompatActivity {
             String setTime = getIntent().getStringExtra("Alarm time");
             Log.i("Retrieved time", setTime);
             realm.executeTransaction(realm -> {
-                Alarm alarm = realm.where(Alarm.class).equalTo("alarmTime", setTime).findFirst();
-                requestCode = alarm.getRequestCode();
+                RealmResults<Alarm> results = realm.where(Alarm.class).equalTo("alarmTime", setTime).findAll();
+                requestCode = results.first().getRequestCode();
+                results.deleteAllFromRealm();
             });
             Log.i("Request Code", String.valueOf(requestCode));
             alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -74,15 +75,12 @@ public class SnoozeActivity extends AppCompatActivity {
             myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(
                     getApplicationContext(), requestCode, myIntent, 0);
+            pendingIntent.cancel();
             alarmManager.cancel(pendingIntent);
             mediaPlayer.stop();
             Intent startAwakeActivity = new Intent(this, FinishActivity.class);
             //To navigate back to the main activity.
             TaskStackBuilder.create(this).addNextIntentWithParentStack(startAwakeActivity).startActivities();
-            realm.executeTransaction(realm -> {
-                RealmResults<Alarm> results = realm.where(Alarm.class).equalTo("alarmTime", setTime).findAll();
-                results.deleteAllFromRealm();
-            });
         } else
             Toast.makeText(this, "You still aren't awake.", Toast.LENGTH_LONG).show();
     }
