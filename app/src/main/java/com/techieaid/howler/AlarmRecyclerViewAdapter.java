@@ -73,7 +73,6 @@ import io.realm.RealmResults;
                 int iD = getAdapterPosition();
                 String time = mTextView.getText().toString();
                 deleteAlarm(iD, time);
-
             });
         }
     }
