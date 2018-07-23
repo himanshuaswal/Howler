@@ -6,4 +6,7 @@
     <string name="first_question">Who is the first Prime Minister of India?</string>
     <string name="option1">Jawaharlal Nehru</string>
     <string name="awake_message">Voila!Now you are awake.</string>
+    <string name="second_question">What is the differentiation of cos(x)</string>
+
+
 </resources>

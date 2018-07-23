@@ -11,7 +11,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +40,6 @@ public class SnoozeActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(getBaseContext(), uri);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
-        Realm.init(this);
         realm = Realm.getDefaultInstance();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
                         WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
@@ -52,11 +53,6 @@ public class SnoozeActivity extends AppCompatActivity {
         option2 = findViewById(R.id.option2);
         option3 = findViewById(R.id.option3);
         option4 = findViewById(R.id.option4);
-        option1.setOnClickListener(v -> checkAnswer(option1));
-        option2.setOnClickListener(v -> checkAnswer(option2));
-        option3.setOnClickListener(v -> checkAnswer(option3));
-        option4.setOnClickListener(v -> checkAnswer(option4));
-
     }
 
     private void checkAnswer(TextView correctOption) {
@@ -92,4 +88,24 @@ public class SnoozeActivity extends AppCompatActivity {
     }
 
 
+    public void onCheckboxClicked(View view) {
+        boolean checked = ((CheckBox) view).isChecked();
+        switch (view.getId()) {
+            case R.id.checkbox1:
+                if (checked)
+                    checkAnswer(option1);
+                break;
+            case R.id.checkbox2:
+                if (checked)
+                    checkAnswer(option2);
+                break;
+            case R.id.checkbox3:
+                if (checked)
+                    checkAnswer(option3);
+                break;
+            default:
+                checkAnswer(option4);
+
+        }
+    }
 }
