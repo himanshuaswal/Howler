@@ -15,6 +15,8 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.techieaid.howler.model.Alarm;
+import com.techieaid.howler.model.Question;
+import com.techieaid.howler.utils.QuestionManager;
 
 import java.util.Calendar;
 
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private int PRIMARY_KEY;
     private Alarm alarm;
     private int requestCode;
+    private int numberOfQuestions;
 
 
     @Override
@@ -41,20 +44,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.custom_toolbar));
-        Realm.init(this);
         realm = Realm.getDefaultInstance();
+        mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         realm.executeTransaction(realm -> results = realm.where(Alarm.class).findAll());
         mRecyclerView = findViewById(R.id.alarm_item);
         mCoordinatorLayout = findViewById(R.id.coordinator_layout);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new AlarmRecyclerViewAdapter(this, results, realm);
+        realm.executeTransaction(realm -> {
+            numberOfQuestions = (int) realm.where(Question.class).count();
+        });
+        Log.i("Number of Questions", String.valueOf(numberOfQuestions));
+        if (numberOfQuestions == 0)
+            QuestionManager.populateQuestionDatabase();
         mAdapter.setOnClickTrashIconListener(setTime -> {
             realm.executeTransaction(realm -> {
                 RealmResults<Alarm> results = realm.where(Alarm.class).equalTo("alarmTime", setTime).findAll();
                 requestCode = results.first().getRequestCode();
                 results.deleteAllFromRealm();
             });
+            Log.i("Alarm deleted", setTime);
+            Log.i("P.I. deleted", String.valueOf(requestCode));
             Intent intent = new Intent(getApplicationContext(), SnoozeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(), requestCode, intent, 0);
@@ -68,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             timeFragment.show(getFragmentManager(), "time_picker");
         });
     }
+
 
     public void DisplayAlarmTime(int hourOfDay, int minute) {
         String setTime = String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute);
@@ -98,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
         if (calSet.compareTo(calNow) <= 0) {
             calSet.add(Calendar.DATE, 1);
         }
-        mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calSet.getTimeInMillis(), mPendingIntent);
         Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Alarm has been set", Snackbar.LENGTH_LONG);
         TextView messageTextView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);

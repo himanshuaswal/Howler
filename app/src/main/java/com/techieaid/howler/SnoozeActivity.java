@@ -18,19 +18,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.techieaid.howler.model.Alarm;
+import com.techieaid.howler.model.Question;
+import com.techieaid.howler.utils.QuestionManager;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class SnoozeActivity extends AppCompatActivity {
+    private TextView questionTextView;
     private TextView option1;
     private TextView option2;
     private TextView option3;
     private TextView option4;
+    private CheckBox checkbox1;
+    private CheckBox checkbox2;
+    private CheckBox checkbox3;
+    private CheckBox checkbox4;
     private AlarmManager alarmManager;
     private Realm realm;
     private int requestCode;
     private MediaPlayer mediaPlayer;
+    private Question question;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +57,31 @@ public class SnoozeActivity extends AppCompatActivity {
                         WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                         WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        questionTextView = findViewById(R.id.question);
         option1 = findViewById(R.id.option1);
         option2 = findViewById(R.id.option2);
         option3 = findViewById(R.id.option3);
         option4 = findViewById(R.id.option4);
+        checkbox1 = findViewById(R.id.checkbox1);
+        checkbox2 = findViewById(R.id.checkbox2);
+        checkbox3 = findViewById(R.id.checkbox3);
+        checkbox4 = findViewById(R.id.checkbox4);
+        getQuestionObject();
+        setQuestionAndAnswers(question);
     }
 
-    private void checkAnswer(TextView correctOption) {
-        if (correctOption.getText().toString().equalsIgnoreCase(getString(R.string.option1))) {
+    private void setQuestionAndAnswers(Question question) {
+
+        questionTextView.setText(question.getQuestion());
+        option1.setText(question.getAnswer1());
+        option2.setText(question.getAnswer2());
+        option3.setText(question.getAnswer3());
+        option4.setText(question.getAnswer4());
+    }
+
+    private void checkAnswer(TextView correctOption, CheckBox selectedCheckbox) {
+        String correctAnswer = question.getCorrectAnswer();
+        if (correctOption.getText().toString().equalsIgnoreCase(correctAnswer)) {
             Log.i("Selected Answer", correctOption.getText().toString());
             String setTime = getIntent().getStringExtra("Alarm time");
             Log.i("Retrieved time", setTime);
@@ -77,8 +102,12 @@ public class SnoozeActivity extends AppCompatActivity {
             Intent startAwakeActivity = new Intent(this, FinishActivity.class);
             //To navigate back to the main activity.
             TaskStackBuilder.create(this).addNextIntentWithParentStack(startAwakeActivity).startActivities();
-        } else
-            Toast.makeText(this, "You still aren't awake.", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "You still don't seem to wake up", Toast.LENGTH_LONG).show();
+            selectedCheckbox.setChecked(false);
+            getQuestionObject();
+            setQuestionAndAnswers(question);
+        }
     }
 
 
@@ -93,19 +122,24 @@ public class SnoozeActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.checkbox1:
                 if (checked)
-                    checkAnswer(option1);
+                    checkAnswer(option1, checkbox1);
                 break;
             case R.id.checkbox2:
                 if (checked)
-                    checkAnswer(option2);
+                    checkAnswer(option2, checkbox2);
                 break;
             case R.id.checkbox3:
                 if (checked)
-                    checkAnswer(option3);
+                    checkAnswer(option3, checkbox3);
                 break;
             default:
-                checkAnswer(option4);
+                checkAnswer(option4, checkbox4);
 
         }
+    }
+
+    public void getQuestionObject() {
+        question = QuestionManager.supplyQuestionObject();
+        Log.i("Question", question.getQuestion());
     }
 }
