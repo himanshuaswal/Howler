@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 
 import com.techieaid.howler.model.Alarm;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private Alarm alarm;
     private int requestCode;
     private int numberOfQuestions;
+    private int animationId;
 
 
     @Override
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.custom_toolbar));
+        animationId = R.anim.layout_animation_fall_down;
         realm = Realm.getDefaultInstance();
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -72,7 +76,12 @@ public class MainActivity extends AppCompatActivity {
             mPendingIntent.cancel();
             mAlarmManager.cancel(mPendingIntent);
         });
+        mAdapter.setOnAddingAlarmItem(() -> {
+            mRecyclerView.scheduleLayoutAnimation();
+        });
         mRecyclerView.setAdapter(mAdapter);
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, animationId);
+        mRecyclerView.setLayoutAnimation(animation);
         mFloatingActionButton = findViewById(R.id.add_alarm);
         mFloatingActionButton.setOnClickListener(v -> {
             DialogFragment timeFragment = new TimePickerFragment();
