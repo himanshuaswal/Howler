@@ -14,7 +14,7 @@ import io.realm.Realm;
     private static String[] questions = {
             "Who is the first Prime Minister of India?",
             "Give the correct differentiation of sin(x)",
-            "What is the biggest planet in our Solar System",
+            "The biggest planet in our Solar System is",
             "Value of -123%17 is?",
             "What is heavier :  A pound of feathers or a pound of stones?",
             "In one day, how many times do the minute hand and the second hand of a clock make a straight line?",

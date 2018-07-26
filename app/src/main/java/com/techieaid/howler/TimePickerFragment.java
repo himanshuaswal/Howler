@@ -3,10 +3,8 @@ package com.techieaid.howler;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.view.View;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
@@ -29,7 +27,7 @@ import java.util.Calendar;
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-        ((MainActivity)getActivity()).DisplayAlarmTime(hourOfDay,minute );
+        ((MainActivity) getActivity()).DisplayAlarmTime(hourOfDay, minute);
 
     }
 }
