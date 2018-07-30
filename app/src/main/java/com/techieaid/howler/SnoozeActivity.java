@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -117,13 +118,6 @@ public class SnoozeActivity extends AppCompatActivity {
         }
     }
 
-
-    @Override
-    public void onBackPressed() {
-        Toast.makeText(this, "Ohh I am gonna make sure that you wake up.!", Toast.LENGTH_LONG).show();
-    }
-
-
     public void onCheckboxClicked(View view) {
         boolean checked = ((CheckBox) view).isChecked();
         switch (view.getId()) {
@@ -148,5 +142,25 @@ public class SnoozeActivity extends AppCompatActivity {
     public void getQuestionObject() {
         question = QuestionManager.supplyQuestionObject();
         Log.i("Question", question.getQuestion());
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                return true;
+            default:
+                return super.dispatchKeyEvent(event);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (toast != null)
+            toast.cancel();
+        toast = Toast.makeText(this, "Ohh I am gonna make sure that you wake up!", Toast.LENGTH_LONG);
+        toast.show();
     }
 }

@@ -65,7 +65,6 @@
         android:layout_marginStart="8dp"
         android:fontFamily="@font/varela_round"
         android:hint="Second Option"
-        android:padding="16dp"
         android:textSize="28sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/checkbox2"
         app:layout_constraintLeft_toRightOf="@id/checkbox2" />
