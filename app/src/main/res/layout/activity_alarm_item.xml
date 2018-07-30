@@ -2,19 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="2dp">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp">
 
         <TextView
             android:id="@+id/alarm_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:layout_weight="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:fontFamily="@font/varela_round"
             android:hint="5:30 PM"
             android:textSize="30sp"
@@ -26,16 +29,25 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:padding="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/alarm_time"
+            app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/ic_delete" />
 
         <TextView
             android:id="@+id/trash_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/varela_round"
             android:text="Delete"
-            android:textSize="18sp" />
-    </LinearLayout>
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/trash_icon"
+            app:layout_constraintLeft_toRightOf="@id/trash_icon"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/trash_icon" />
+    </android.support.constraint.ConstraintLayout>
 
     <View
         android:id="@+id/divider"

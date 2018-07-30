@@ -30,16 +30,17 @@ public class MainActivity extends AppCompatActivity {
     AlarmRecyclerViewAdapter mAdapter;
     private FloatingActionButton mFloatingActionButton;
     private PendingIntent mPendingIntent;
-    private int REQUEST_CODE;
+    private int REQUEST_CODE = 100;
     private Realm realm;
     AlarmManager mAlarmManager;
     private CoordinatorLayout mCoordinatorLayout;
     private RealmResults<Alarm> results;
-    private int PRIMARY_KEY;
+    private int PRIMARY_KEY = 0;
     private Alarm alarm;
     private int requestCode;
     private int numberOfQuestions;
-    private int animationId;
+    private int layoutAnimationId;
+    private Alarm checkAlarm;
 
 
     @Override
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.custom_toolbar));
-        animationId = R.anim.layout_animation_fall_down;
+        layoutAnimationId = R.anim.layout_animation_slide_right;
         realm = Realm.getDefaultInstance();
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -76,11 +77,8 @@ public class MainActivity extends AppCompatActivity {
             mPendingIntent.cancel();
             mAlarmManager.cancel(mPendingIntent);
         });
-        mAdapter.setOnAddingAlarmItem(() -> {
-            mRecyclerView.scheduleLayoutAnimation();
-        });
         mRecyclerView.setAdapter(mAdapter);
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, animationId);
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, layoutAnimationId);
         mRecyclerView.setLayoutAnimation(animation);
         mFloatingActionButton = findViewById(R.id.add_alarm);
         mFloatingActionButton.setOnClickListener(v -> {
@@ -91,40 +89,53 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void DisplayAlarmTime(int hourOfDay, int minute) {
+        String primaryKey = String.format("%02d", hourOfDay) + String.format("%02d", minute);
         String setTime = String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute);
-        setAlarm(hourOfDay, minute, setTime);
+        setAlarm(hourOfDay, minute, setTime, primaryKey);
     }
 
-    private void setAlarm(int hourOfDay, int minute, String setTime) {
-        Intent intent = new Intent(getApplicationContext(), SnoozeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("Alarm time", setTime);
-        int numberOfAlarms = (int) realm.where(Alarm.class).count();
-        REQUEST_CODE = numberOfAlarms + 1;
-        PRIMARY_KEY = numberOfAlarms + 100;
-        Log.i("Request Code", String.valueOf(REQUEST_CODE));
-        mPendingIntent = PendingIntent.getActivity(getApplicationContext(), REQUEST_CODE, intent, 0);
-        realm.executeTransaction((Realm realm) -> {
-            alarm = realm.createObject(Alarm.class, PRIMARY_KEY);
-            alarm.setAlarmTime(setTime);
-            alarm.setRequestCode(REQUEST_CODE);
-        });
-        mAdapter.updateAdapter(alarm);
-        Calendar calNow = Calendar.getInstance();
-        Calendar calSet = (Calendar) calNow.clone();
-        calSet.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calSet.set(Calendar.MINUTE, minute);
-        calSet.set(Calendar.SECOND, 0);
-        calSet.set(Calendar.MILLISECOND, 0);
-        if (calSet.compareTo(calNow) <= 0) {
-            calSet.add(Calendar.DATE, 1);
+    private void setAlarm(int hourOfDay, int minute, String setTime, String primaryKey) {
+        realm.executeTransaction(realm -> checkAlarm = realm.where(Alarm.class).equalTo("alarmTime", setTime).findFirst());
+        if (checkAlarm == null) {
+            Intent intent = new Intent(getApplicationContext(), SnoozeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("Alarm time", setTime);
+            PRIMARY_KEY = Integer.parseInt(primaryKey);
+            REQUEST_CODE = PRIMARY_KEY;
+            Log.i("Request Code", String.valueOf(REQUEST_CODE));
+            mPendingIntent = PendingIntent.getActivity(getApplicationContext(), REQUEST_CODE, intent, 0);
+            realm.executeTransaction((Realm realm) -> {
+                alarm = realm.createObject(Alarm.class, PRIMARY_KEY);
+                alarm.setAlarmTime(setTime);
+                alarm.setRequestCode(REQUEST_CODE);
+            });
+            mAdapter.updateAdapter(alarm);
+            Calendar calNow = Calendar.getInstance();
+            Calendar calSet = (Calendar) calNow.clone();
+            calSet.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calSet.set(Calendar.MINUTE, minute);
+            calSet.set(Calendar.SECOND, 0);
+            calSet.set(Calendar.MILLISECOND, 0);
+            if (calSet.compareTo(calNow) <= 0) {
+                calSet.add(Calendar.DATE, 1);
+            }
+            mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calSet.getTimeInMillis(), mPendingIntent);
+            String alarmSetMessage = "Alarm has been set";
+            showSnackbar(alarmSetMessage);
+        } else {
+            String alarmExistsMessage = "Alarm already exists";
+            showSnackbar(alarmExistsMessage);
         }
-        mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calSet.getTimeInMillis(), mPendingIntent);
-        Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Alarm has been set", Snackbar.LENGTH_LONG);
+
+    }
+
+    private void showSnackbar(String messageToDisplay) {
+        Snackbar snackbar = Snackbar.make(mCoordinatorLayout, messageToDisplay, Snackbar.LENGTH_LONG);
         TextView messageTextView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         messageTextView.setTextColor(getColor(R.color.colorAccent));
         snackbar.show();
     }
+
 }
 
 

@@ -26,7 +26,6 @@ import io.realm.RealmResults;
     private List<Alarm> mAlarmList;
     private Realm realm;
     private onClickTrashIconListener mOnClickTrashIconListener;
-    private onAddingAlarmItem mOnAddingAlarmItem;
 
 
     AlarmRecyclerViewAdapter(Context context, RealmResults<Alarm> results, Realm realm) {
@@ -57,7 +56,6 @@ import io.realm.RealmResults;
     public void updateAdapter(Alarm alarm) {
         mAlarmList.add(alarm);
         notifyDataSetChanged();
-        mOnAddingAlarmItem.runLayoutAnimation();
     }
 
 
@@ -69,7 +67,6 @@ import io.realm.RealmResults;
             super(itemView);
             mTextView = itemView.findViewById(R.id.alarm_time);
             mImageView = itemView.findViewById(R.id.trash_icon);
-
             mImageView.setOnClickListener(v -> {
                 int iD = getAdapterPosition();
                 String time = mTextView.getText().toString();
@@ -90,13 +87,6 @@ import io.realm.RealmResults;
         void cancelPendingIntent(String time);
     }
 
-    public interface onAddingAlarmItem {
-        void runLayoutAnimation();
-    }
-
-    public void setOnAddingAlarmItem(onAddingAlarmItem mOnAddingAlarmItem) {
-        this.mOnAddingAlarmItem = mOnAddingAlarmItem;
-    }
 
     public void setOnClickTrashIconListener(onClickTrashIconListener mOnClickTrashIconListener) {
         this.mOnClickTrashIconListener = mOnClickTrashIconListener;
