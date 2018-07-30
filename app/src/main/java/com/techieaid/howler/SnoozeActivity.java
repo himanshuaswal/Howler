@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -39,11 +40,14 @@ public class SnoozeActivity extends AppCompatActivity {
     private int requestCode;
     private MediaPlayer mediaPlayer;
     private Question question;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_snooze);
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         mediaPlayer = MediaPlayer.create(getBaseContext(), uri);
         mediaPlayer.setLooping(true);
@@ -103,7 +107,10 @@ public class SnoozeActivity extends AppCompatActivity {
             //To navigate back to the main activity.
             TaskStackBuilder.create(this).addNextIntentWithParentStack(startAwakeActivity).startActivities();
         } else {
-            Toast.makeText(this, "You still don't seem to wake up", Toast.LENGTH_LONG).show();
+            if (toast != null)
+                toast.cancel();
+            toast = Toast.makeText(this, "You still don't seem to wake up", Toast.LENGTH_LONG);
+            toast.show();
             selectedCheckbox.setChecked(false);
             getQuestionObject();
             setQuestionAndAnswers(question);
