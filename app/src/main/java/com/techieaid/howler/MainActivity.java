@@ -136,6 +136,13 @@ public class MainActivity extends AppCompatActivity {
         snackbar.show();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent homeActivity = new Intent(Intent.ACTION_MAIN);
+        homeActivity.addCategory(Intent.CATEGORY_HOME);
+        homeActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(homeActivity);
+    }
 }
 
 

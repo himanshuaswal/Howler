@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
+    android:paddingEnd="16dp"
     tools:context=".SnoozeActivity">
 
 
@@ -43,7 +44,7 @@
         android:layout_marginStart="8dp"
         android:fontFamily="@font/varela_round"
         android:hint="First option"
-        android:textSize="28sp"
+        android:textSize="24sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/checkbox1"
         app:layout_constraintLeft_toRightOf="@id/checkbox1" />
 
@@ -62,10 +63,11 @@
         android:id="@+id/option2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:fontFamily="@font/varela_round"
         android:hint="Second Option"
-        android:textSize="28sp"
+        android:maxLines="2"
+        android:textSize="24sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/checkbox2"
         app:layout_constraintLeft_toRightOf="@id/checkbox2" />
 
@@ -87,8 +89,7 @@
         android:layout_marginStart="8dp"
         android:fontFamily="@font/varela_round"
         android:hint="Third Option"
-        android:paddingEnd="16dp"
-        android:textSize="28sp"
+        android:textSize="24sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/checkbox3"
         app:layout_constraintLeft_toRightOf="@id/checkbox3" />
 
@@ -110,8 +111,7 @@
         android:layout_marginStart="8dp"
         android:fontFamily="@font/varela_round"
         android:hint="Fourth Option"
-        android:paddingEnd="16dp"
-        android:textSize="28sp"
+        android:textSize="24sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/checkbox4"
         app:layout_constraintLeft_toRightOf="@id/checkbox4" />
 
